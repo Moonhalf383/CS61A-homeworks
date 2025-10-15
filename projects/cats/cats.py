@@ -166,8 +166,15 @@ def memo_diff(diff_function):
     def memoized(typed, source, limit):
         # BEGIN PROBLEM EC
         "*** YOUR CODE HERE ***"
+        key = (typed,source)
+        if key in cache:
+            cached_limit,cached_value = cache[key]
+            if limit <= cached_limit:
+                return cached_value
+        new_value = diff_function(typed,source,limit)
+        cache[key] = (limit,new_value)
+        return new_value
         # END PROBLEM EC
-
     return memoized
 
 
@@ -175,7 +182,7 @@ def memo_diff(diff_function):
 # Phase 2 #
 ###########
 
-
+@memo 
 def autocorrect(typed_word, word_list, diff_function, limit):
     """Returns the element of WORD_LIST that has the smallest difference
     from TYPED_WORD based on DIFF_FUNCTION. If multiple words are tied for the smallest difference,
@@ -254,7 +261,7 @@ def furry_fixes(typed, source, limit):
         return temp + 1 
     # END PROBLEM 6
 
-
+@memo_diff
 def minimum_mewtations(typed, source, limit):
     """A diff function for autocorrect that computes the edit distance from TYPED to SOURCE.
     This function takes in a string TYPED, a string SOURCE, and a number LIMIT.
@@ -272,18 +279,23 @@ def minimum_mewtations(typed, source, limit):
     >>> minimum_mewtations("ckiteus", "kittens", big_limit) # ckiteus -> kiteus -> kitteus -> kittens
     3
     """
+    if abs(len(typed)-len(source)) > limit:
+        return limit + 1 
     if typed == source:
         return 0
     if len(typed) == 0 or len(source) == 0: # Base cases should go here, you may add more base cases as needed.
         # BEGIN
         "*** YOUR CODE HERE ***"
-        return max(len(typed),len(source))
+        required_edits = max(len(typed),len(source))
+        if required_edits > limit:
+            return limit + 1 
+        return required_edits
         # END
     # Recursive cases should go below here
     if limit < 0: # Feel free to remove or add additional cases
         # BEGIN 
         "*** YOUR CODE HERE ***"
-        return 1 
+        return limit + 1  
         # END
     else:
         # BEGIN
