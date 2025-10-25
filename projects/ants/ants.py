@@ -54,6 +54,7 @@ class Insect:
     next_id = 0  # Every insect gets a unique id number
     damage = 0
     # ADD CLASS ATTRIBUTES HERE
+    is_waterproof = False 
 
     def __init__(self, health, place=None):
         """Create an Insect with a health amount and a starting PLACE."""
@@ -105,6 +106,7 @@ class Ant(Insect):
 
     def __init__(self, health=1):
         super().__init__(health)
+        self.damage_undoubled = True  
 
     def can_contain(self, other):
         return False
@@ -143,6 +145,9 @@ class Ant(Insect):
         """Double this ants's damage, if it has not already been doubled."""
         # BEGIN Problem 12
         "*** YOUR CODE HERE ***"
+        if self.damage_undoubled:
+            self.damage_undoubled = False
+            self.damage *= 2
         # END Problem 12
 
 
@@ -361,6 +366,9 @@ class ContainerAnt(Ant):
         if self.ant_contained:
             self.ant_contained.action(gamestate)
         # END Problem 8a
+    def double(self):
+        super().double()
+        self.ant_contained.double()
 
 
 class BodyguardAnt(ContainerAnt):
@@ -400,10 +408,17 @@ class Water(Place):
         its health to 0."""
         # BEGIN Problem 10
         "*** YOUR CODE HERE ***"
+        super().add_insect(insect)
+        if not insect.is_waterproof:
+            insect.reduce_health(insect.health)
         # END Problem 10
 
 # BEGIN Problem 11
 # The ScubaThrower class
+class ScubaThrower(ThrowerAnt):
+    food_cost = 6
+    name = 'Scuba'
+    is_waterproof = True 
 # END Problem 11
 
 
@@ -414,7 +429,7 @@ class QueenAnt(ThrowerAnt):
     food_cost = 7
     # OVERRIDE CLASS ATTRIBUTES HERE
     # BEGIN Problem 12
-    implemented = False   # Change to True to view in the GUI
+    implemented = True   # Change to True to view in the GUI
     # END Problem 12
 
     def action(self, gamestate):
@@ -423,6 +438,12 @@ class QueenAnt(ThrowerAnt):
         """
         # BEGIN Problem 12
         "*** YOUR CODE HERE ***"
+        super().action(gamestate)
+        index = self.place.exit
+        while index != None:
+            if index.ant:
+                index.ant.double()
+            index = index.exit
         # END Problem 12
 
     def reduce_health(self, amount):
@@ -431,6 +452,9 @@ class QueenAnt(ThrowerAnt):
         """
         # BEGIN Problem 12
         "*** YOUR CODE HERE ***"
+        if amount >= self.health:
+            ants_lose() 
+        super().reduce_health(amount)
         # END Problem 12
 
 
