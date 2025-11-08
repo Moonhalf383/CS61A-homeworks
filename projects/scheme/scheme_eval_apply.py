@@ -100,7 +100,7 @@ def eval_all(expressions, env):
     """
     # BEGIN PROBLEM 6
     if expressions == nil:
-        return None 
+        return nil    
     expressions.first = scheme_eval(expressions.first,env)
     if expressions.rest == nil:
         return expressions.first
