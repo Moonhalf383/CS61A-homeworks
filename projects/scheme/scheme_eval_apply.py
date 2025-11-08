@@ -1,4 +1,5 @@
 import operator
+from re import L
 import sys
 
 from pair import *
@@ -68,10 +69,16 @@ def scheme_apply(procedure, args, env):
     elif isinstance(procedure, LambdaProcedure):
         # BEGIN PROBLEM 9
         "*** YOUR CODE HERE ***"
+        new_frame = procedure.env.make_child_frame(procedure.formals,args)
+        body_copy = Pair(procedure.body.first,procedure.body.rest)
+        return eval_all(body_copy,new_frame) 
         # END PROBLEM 9
     elif isinstance(procedure, MuProcedure):
         # BEGIN PROBLEM 11
         "*** YOUR CODE HERE ***"
+        new_frame = env.make_child_frame(procedure.formals,args)
+        body_copy = Pair(procedure.body.first,procedure.body.rest)
+        return eval_all(body_copy,new_frame)
         # END PROBLEM 11
     else:
         assert False, "Unexpected procedure: {}".format(procedure)
@@ -92,7 +99,12 @@ def eval_all(expressions, env):
     2
     """
     # BEGIN PROBLEM 6
-    return scheme_eval(expressions.first, env) # replace this with lines of your own code
+    if expressions == nil:
+        return None 
+    expressions.first = scheme_eval(expressions.first,env)
+    if expressions.rest == nil:
+        return expressions.first
+    return eval_all(expressions.rest,env)
     # END PROBLEM 6
 
 
