@@ -37,7 +37,7 @@ def scheme_eval(expr, env, _=None): # Optional third argument is ignored
         # BEGIN PROBLEM 3
         "*** YOUR CODE HERE ***"
         operator = scheme_eval(first,env)
-        operands = nil if rest is nil else Pair.map(rest,lambda x : scheme_eval(expr = x,env=env) if x is not nil else None)
+        operands = nil if rest is nil else Pair.map(rest,lambda x : scheme_eval(expr = x,env=env) if x is not nil else nil)
         return scheme_apply(operator,operands,env)
         # END PROBLEM 3
 
