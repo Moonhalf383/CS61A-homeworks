@@ -48,6 +48,7 @@ def do_define_form(expressions, env):
         new_format = signature.rest 
         new_body = expressions.rest  
         new_lambda = LambdaProcedure(new_format, new_body, env)
+        print("DEBUG",new_lambda)
         env.bindings[new_name] = new_lambda
         return new_name
         # END PROBLEM 10
